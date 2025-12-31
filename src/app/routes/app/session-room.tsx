@@ -1,12 +1,9 @@
 import { ContentLayout, DashboardLayout } from "@/components/layouts"
 import { direction } from "@/features/chat-session/api/list-message"
-import { useChatWebSocket } from "@/features/chat-session/api/websocket"
 import ListMessages from "@/features/chat-session/components/list-messages"
 import SendMessage from "@/features/chat-session/components/send-message"
 import { useUser } from "@/lib/auth"
-import { ChatMessage, EventType, MessageEnvelope, PaginatedResponse, User } from "@/types/api"
-import { InfiniteData, useQueryClient } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useParams, useSearchParams } from "react-router"
 import { validate } from 'uuid'
 

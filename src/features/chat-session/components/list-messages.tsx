@@ -14,7 +14,6 @@ const ListMessages = (
         currentDirection,
         setCurrentDirection,
     } : { sessionId: string, limit: number, currentCursor: string | null, setCurrentCursor: (cursor: string | null) => void, currentDirection: direction, setCurrentDirection : (direction : direction) => void }) : React.ReactNode => {
-    //const {data, hasNextPage, hasPreviousPage, fetchNextPage, fetchPreviousPage, isLoading, error} = useInfiniteListMessage({ sessionId, cursor, limit, direction })
     const {data, isFetching, isLoading} = useListMessage({ sessionId, cursor: currentCursor, limit, direction: currentDirection})
     const navigate = useNavigate();
 
@@ -33,8 +32,21 @@ const ListMessages = (
         return uniqueMessages.sort((a, b) => a.seq - b.seq);
     }, [data?.data]);
 
-    // const allMessage = data?.pages.flatMap((page) => page.data ) || []
-    // const sortedMessage = allMessage.sort((firstData, secondData) => firstData.seq - secondData.seq )
+    sortedMessages.map((chat) => {
+        const fullOptions: Intl.DateTimeFormatOptions = {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'CET',
+            hour12: false,
+        };
+        const new_created_at = Intl.DateTimeFormat("en", fullOptions).format(new Date(chat.created_at))
+        chat.created_at = new_created_at
+    })
+
 
     if (isLoading) { 
         return (
@@ -44,13 +56,17 @@ const ListMessages = (
         )
     }
 
-
     return (
         <div className="relative w-4/5 min-h-screen border border-red-600 flex flex-col overflow-y-auto">
             {sortedMessages?.map((chat) => (
                 <div key={chat.id} className="chat-message">
-                    <div className="chat-message-user">
-                        {chat.user_id}
+                    <div className="flex flex-row justify-between w-full chat-message-user-and-created-at">
+                        <div className="chat-message-user">
+                            <b>{chat.username}</b>
+                        </div>
+                        <div className="chat-message-created-at">
+                            {chat.created_at}
+                        </div>
                     </div>
                     <div className="chat-message-content">
                         {chat.content}
